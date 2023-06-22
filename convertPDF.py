@@ -29,7 +29,7 @@ for acciones in dicTextos:
 print("Inicia creacion de archivo de excel")
 
 df = pd.DataFrame({"Nro.":numero_personas,"Cedula": cedulas_personas, "Accion Nro.":accion_personas},index=None)  
-nameExcel = "./excel/sys.argv[1]+".xlsx"
+nameExcel = "./excel/"+sys.argv[1]+".xlsx"
 
 with pd.ExcelWriter(
     nameExcel,
