@@ -2,18 +2,18 @@ from pypdf import PdfReader, PdfWriter
 import pandas as pd
 import sys, re
 
-archive= "./pdfs/"+sys.argv[1]+".PDF"
+archive= "./pdfs/"+sys.argv[1]+".pdf"
 
 reader = PdfReader(archive)
 
 dicTextos = {}
 count=0
 
-print("Inicia lectura de PFD's")
+print("Inicia Lectura de archivo PFD's")
 for page in reader.pages:
     count +=1
     dicTextos[count]=page.extract_text()[0:500]
-print("finaliza lectura")
+print("finaliza lectura de ",count," paginas del archivo: ", archive)
 
 cedulas_personas = []    
 accion_personas = []
@@ -26,7 +26,7 @@ for acciones in dicTextos:
     accion_personas.append(accion[0])
     numero_personas.append(acciones)
 
-print("Inicia creacion de archivo de excel")
+print("Creando archivo de excel")
 
 df = pd.DataFrame({"Nro.":numero_personas,"Cedula": cedulas_personas, "Accion Nro.":accion_personas},index=None)  
 nameExcel = "./excel/"+sys.argv[1]+".xlsx"
@@ -35,6 +35,6 @@ with pd.ExcelWriter(
     nameExcel,
         engine="xlsxwriter",
  ) as writer:
-     df.to_excel(writer, sheet_name="Sheet1")  
+     df.to_excel(writer, sheet_name="Sheet1", index=False)  
 
-print("Finaliza creacion de archivo de excel")
+print("Se ha creado Archivo de nombre: ", nameExcel)
