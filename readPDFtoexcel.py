@@ -1,4 +1,4 @@
-from pypdf import PdfReader, PdfWriter
+from pypdf import PdfReader
 import pandas as pd
 import sys, re
 
@@ -9,10 +9,13 @@ reader = PdfReader(archive)
 dicTextos = {}
 count=0
 
+# extrayendo datos del pdf
+
 print("Inicia Lectura de archivo PFD's")
 for page in reader.pages:
     count +=1
     dicTextos[count]=page.extract_text()[0:500]
+    
 print("finaliza lectura de ",count," paginas del archivo: ", archive)
 
 cedulas_personas = []    
@@ -23,7 +26,7 @@ for acciones in dicTextos:
     ced=re.search("[0-9]{10}", dicTextos[acciones])
     accion = re.search("[0-9]{7}-", dicTextos[acciones])
     cedulas_personas.append(ced[0])
-    accion_personas.append(accion[0])
+    accion_personas.append(accion[0][0:7])
     numero_personas.append(acciones)
 
 print("Creando archivo de excel")
