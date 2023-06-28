@@ -17,7 +17,7 @@ for page in reader.pages:
     dicTextos[count]=page.extract_text()[0:500]
     
 print("finaliza lectura de ",count," paginas del archivo: ", archive)
-
+print (dicTextos[1])
 cedulas_personas = []    
 accion_personas = []
 numero_personas = []
