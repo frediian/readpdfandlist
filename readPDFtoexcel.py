@@ -17,7 +17,7 @@ for page in reader.pages:
     dicTextos[count]=page.extract_text()[0:500]
     
 print("finaliza lectura de ",count," paginas del archivo: ", archive)
-print (dicTextos[1])
+
 cedulas_personas = []    
 accion_personas = []
 numero_personas = []
@@ -25,9 +25,15 @@ numero_personas = []
 for acciones in dicTextos:
     ced=re.search("[0-9]{10}", dicTextos[acciones])
     accion = re.search("[0-9]{7}-", dicTextos[acciones])
-    cedulas_personas.append(ced[0])
-    accion_personas.append(accion[0][0:7])
-    numero_personas.append(acciones)
+# registrar solo datos existentes
+    if ced != None and accion != None :
+        cedulas_personas.append(ced[0])
+        accion_personas.append(accion[0][0:7])
+        numero_personas.append(acciones)
+    else:
+        cedulas_personas.append("")
+        accion_personas.append("")
+        numero_personas.append(acciones)
 
 print("Creando archivo de excel")
 
