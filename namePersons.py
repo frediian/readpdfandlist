@@ -9,5 +9,9 @@ col_id = "NÚMERO IDENTIFICACIÓN"
 col_name = "NOMBRES"
 
 person_id= str(sys.argv[2])
+info = datos[datos[col_id]==person_id][col_name]
 
-print(datos[datos[col_id]==person_id][col_name].values[0])
+if info.empty:
+    print("Not found")
+else:
+    print(info.values[0])

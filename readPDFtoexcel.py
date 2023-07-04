@@ -10,40 +10,34 @@ dicTextos = {}
 count=0
 
 # extrayendo datos del pdf
-
 print("Inicia Lectura de archivo PFD's")
 for page in reader.pages:
     count +=1
-    dicTextos[count]=page.extract_text()[0:500]
+    dicTextos[count]=page.extract_text()[0:800]
     
 print("finaliza lectura de ",count," paginas del archivo: ", archive)
 
-cedulas_personas = []    
-accion_personas = []
-numero_personas = []
+person_id, person_doc, person_count, brute  = [],[],[],[]
 
 for acciones in dicTextos:
-    ced=re.search("[0-9]{10}", dicTextos[acciones])
-    accion = re.search("[0-9]{7}-", dicTextos[acciones])
+    p_id=re.search("[0-9]{10}\s", dicTextos[acciones][300:800])
+    p_doc = re.search("[0-9]{7}-", dicTextos[acciones][0:150])
 # registrar solo datos existentes
-    if ced != None and accion != None :
-        cedulas_personas.append(ced[0])
-        accion_personas.append(accion[0][0:7])
-        numero_personas.append(acciones)
+    if p_id != None and p_doc != None :
+        person_id.append(str(p_id[0]))
+        person_doc.append(p_doc[0][0:7])
     else:
-        cedulas_personas.append("")
-        accion_personas.append("")
-        numero_personas.append(acciones)
+        person_id.append("")
+        person_doc.append("")
+
+    person_count.append(acciones)
+    brute.append(dicTextos[acciones])
 
 print("Creando archivo de excel")
-
-df = pd.DataFrame({"Nro.":numero_personas,"Cedula": cedulas_personas, "Accion Nro.":accion_personas},index=None)  
+df = pd.DataFrame({"Nro.":person_count,"Identification": person_id, "Doc Nro.":person_doc, "data":brute},index=None)  
 nameExcel = "./excel/"+sys.argv[1]+".xlsx"
 
-with pd.ExcelWriter(
-    nameExcel,
-        engine="xlsxwriter",
- ) as writer:
+with pd.ExcelWriter( nameExcel, engine="xlsxwriter", ) as writer:
      df.to_excel(writer, sheet_name="Sheet1", index=False)  
 
 print("Se ha creado Archivo de nombre: ", nameExcel)
